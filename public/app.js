@@ -16,6 +16,12 @@ class ChatBot extends HTMLElement {
 
     const formData = new FormData(this.form);
     let prompt = [...formData][0][1];
+    console.log(prompt);
+
+    // [...formData].map(data => {
+    //   console.log(data[0], ': ', data[1]);
+    // })
+    // return;
 
     const chatLog = 'Human: Hello, who are you?\nAI: I am doing great. How can I help you today?\n';
     const question = 'Could you tell me what your favorite German thrash metal album is?';
