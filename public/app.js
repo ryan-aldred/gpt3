@@ -6,6 +6,7 @@ class ChatBot extends HTMLElement {
     this.form = this.querySelector('.chatbot__form');
     this.prompt = this.querySelector('.chatbot__input');
     this.chatbox = this.querySelector('.chatbox');
+    this.chatData = [];
 
     this.form.addEventListener('submit', this.handlePromptSubmit);
   }
@@ -35,23 +36,47 @@ class ChatBot extends HTMLElement {
       'stop': '\nHuman'
     };
     
-    fetch('https://api.openai.com/v1/engines/ada/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/JSON',
-        'Authorization': `Bearer ${secret_api_key}`
-      },
-      body: JSON.stringify(params)
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log(prompt)
-      console.log(data);
+  //   fetch('https://api.openai.com/v1/engines/ada/completions', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/JSON',
+  //       'Authorization': `Bearer ${secret_api_key}`
+  //     },
+  //     body: JSON.stringify(params)
+  //   })
+  //   .then(res => res.json())
+  //   .then(data => {
+  //     console.log(prompt)
+  //     console.log(data);
 
-      const chatData = this.parseGptResponse(prompt, data);
-      this.renderChatItem(chatData);
-    })
-    .catch(error => console.log(error));
+  //     const chatData = this.parseGptResponse(prompt, data);
+  //     this.renderChatItem(chatData);
+  //   })
+  //   .catch(error => console.log(error));
+
+
+    // cut down on api requests made during prototyping
+    const data = {
+      created: Date.now(),
+      choices: [
+        {
+          text: 'this is dummy data'
+        }
+      ]
+    }
+
+    // parse the chat data for what we need
+    const newChatData = this.parseGptResponse(prompt, data);
+    // take chatdata, add it to the chat history array,
+    this.chatData.push(newChatData);
+    // re-sort the array, optimizing for moving the last time directly to the front
+    // render the new chat data item in front of the existing chat data
+    const newChatItem = this.renderChatItem(newChatData);
+    this.chatbox.prepend(newChatItem);
+
+
+
+    console.log(this.chatData);
   }
 
   parseGptResponse = (prompt, responseData) => {
@@ -71,8 +96,9 @@ class ChatBot extends HTMLElement {
     chat.innerHTML = `
       <div>Prompt: ${prompt}</div>
       <div>Response: ${response}</div>
+      <div>Id: ${id}</div>
     `;
-    this.chatbox.appendChild(chat);
+    return chat;
   }
 }
 
