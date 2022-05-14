@@ -5,6 +5,7 @@ class ChatBot extends HTMLElement {
     super();
     this.form = this.querySelector('.chatbot__form');
     this.prompt = this.querySelector('.chatbot__input');
+    this.chatbox = this.querySelector('.chatbox');
 
     this.form.addEventListener('submit', this.handlePromptSubmit);
   }
@@ -15,7 +16,7 @@ class ChatBot extends HTMLElement {
     const formData = new FormData(this.querySelector('.chatbot__form'));
 
 
-    const prompt = [...formData][0][1];
+    let prompt = [...formData][0][1];
 
     const apiKey = secret_api_key;
     const chatLog = 'Human: Hello, who are you?\nAI: I am doing great. How can I help you today?\n';
@@ -41,7 +42,17 @@ class ChatBot extends HTMLElement {
     })
     .then(res => res.json())
     .then(data => {
-      console.log(data.choices[0].text);
+      console.log(prompt)
+      console.log(data);
+
+      const chat = document.createElement('li');
+      chat.className = 'chatbox__chat';
+      chat.dataset.created = data.created;
+      chat.innerHTML = `
+        <div>Prompt: ${prompt}</div>
+        <div>Response: ${data.choices[0].text}</div>
+      `;
+      this.chatbox.appendChild(chat);
     })
     .catch(error => console.log(error));
   } 
