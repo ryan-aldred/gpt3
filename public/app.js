@@ -32,7 +32,7 @@ class ChatBot extends HTMLElement {
     };
   
   
-    fetch('https://api.openai.com/v1/engines/davinci/completions', {
+    fetch('https://api.openai.com/v1/engines/ada/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/JSON',
