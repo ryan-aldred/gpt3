@@ -14,10 +14,9 @@ class ChatBot extends HTMLElement {
     evt.preventDefault();
     console.log(this);
 
-    const formData = new FormData(this.querySelector('.chatbot__form'));
-
+    const formData = new FormData(this.form);
     let prompt = [...formData][0][1];
-    const apiKey = secret_api_key;
+
     const chatLog = 'Human: Hello, who are you?\nAI: I am doing great. How can I help you today?\n';
     const question = 'Could you tell me what your favorite German thrash metal album is?';
 
@@ -34,7 +33,7 @@ class ChatBot extends HTMLElement {
       method: 'POST',
       headers: {
         'Content-Type': 'application/JSON',
-        'Authorization': `Bearer ${apiKey}`
+        'Authorization': `Bearer ${secret_api_key}`
       },
       body: JSON.stringify(params)
     })
@@ -58,7 +57,7 @@ class ChatBot extends HTMLElement {
   }
 
   renderChatItem = ({prompt, response, id}) => {
-    console.log('renderChatItem', );
+    console.log('renderChatItem');
 
     const chat = document.createElement('li');
     chat.className = 'chatbox__chat';
