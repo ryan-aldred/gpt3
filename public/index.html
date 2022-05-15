@@ -8,16 +8,23 @@
   <link rel="stylesheet" href="./app.css">
 </head>
 <body>
-  <h1>gpt3</h1>
-  <chat-bot>
-    <h2>Chatbot</h2>
-    <form class="chatbot__form">
-      <label for="prompt">Prompt</label>
-      <input name="prompt" type="text" class="chatbot__input" />
-      <button type="submit">Go</button>
-    </form>
-    <ul class="chatbox"></ul>
-  </chat-bot>
+  <header class="header">
+    <h1>gpt3</h1>
+  </header>
+
+  <section class="page-width">
+    <div class="card">
+      <h2>Chatbot</h2>
+      <chat-bot>
+        <form class="chatbot__form">
+          <label for="prompt">Prompt</label>
+          <input name="prompt" type="text" class="chatbot__input" />
+          <button type="submit">Go</button>
+        </form>
+        <ul class="chatbox"></ul>
+      </chat-bot>
+    </div>
+  </section>
 
   <script src="./secret.js"></script>  
   <script src="./app.js"></script>

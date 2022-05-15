@@ -1,4 +1,33 @@
+:root {
+  --color-background: rgba(0, 0, 0, 1);
+  --color-primary: rgba(255, 255, 255, 1);
+  --color-element-accent: rgba(255, 255, 255, 0.6)
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+}
+
 body {
-  background-color: black;
-  color: white;
+  background-color: var(--color-background);
+  color: var(--color-primary);
+}
+
+.page-width {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px 10px;
+}
+
+.header {
+  box-shadow: 0px 2px 12px var(--color-element-accent);
+  margin-bottom: 50px;
+  padding: 10px 30px 20px;
+}
+
+chat-bot {
+  display: block;
 }
