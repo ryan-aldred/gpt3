@@ -93,8 +93,8 @@ class ChatBot extends HTMLElement {
     chat.className = 'chatbox__chat';
     chat.dataset.id = id;
     chat.innerHTML = `
-      <div>Prompt: ${prompt}</div>
-      <div>Response: ${response}</div>
+      <div class='chatbox__chat-prompt'><span class='chatbox__prompt-author'>You</span> ${prompt}</div>
+      <div class='chatbox__response'>${response} <span class='chatbox__response-author'>Norma</span></div>
     `;
     return chat;
   }
