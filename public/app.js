@@ -76,6 +76,8 @@ class ChatBot extends HTMLElement {
     this.chatString = this.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response;
 
     console.log(this.chatString);
+    this.prompt.value = '';
+    this.prompt.focus();
   }
 
   parseGPTResponse = (prompt, responseData) => {

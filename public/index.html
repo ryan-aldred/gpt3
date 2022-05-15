@@ -13,14 +13,14 @@
   </header>
   <div class="chatbot__wrapper">
     <chat-bot>
-      <h2 class="chatbot__heading">Chatbot</h2>
+      <h2 class="chatbot__heading">Ask Norma</h2>
       <p class="chatbot__intro">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Norma is our return support specialist, please let her know name and order number
       </p>
       <form class="chatbot__form">
         <label for="prompt">Prompt</label>
-        <input name="prompt" type="text" class="chatbot__input" />
-        <button type="submit">Go</button>
+        <input name="prompt" id='prompt' type="text" class="chatbot__input" placeholder='I need help returning order 80123'/>
+        <button type="submit" class='chatbot__submit'>Go</button>
       </form>
       <ul class="chatbox"></ul>
     </chat-bot>
