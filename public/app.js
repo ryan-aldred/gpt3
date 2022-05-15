@@ -3,6 +3,8 @@ console.log('gpt3');
 class ChatBot extends HTMLElement {
   constructor () {
     super();
+    this.chatString = 'Human: Hello, who are you?\nAI: I am doing great. How can I help you today?';
+    this.chatData = [];
     this.form = this.querySelector('.chatbot__form');
     this.prompt = this.querySelector('.chatbot__input');
     this.chatbox = this.querySelector('.chatbox');
@@ -16,18 +18,10 @@ class ChatBot extends HTMLElement {
 
     const formData = new FormData(this.form);
     let prompt = [...formData][0][1];
-    console.log(prompt);
-
-    // [...formData].map(data => {
-    //   console.log(data[0], ': ', data[1]);
-    // })
-    // return;
-
-    const chatLog = 'Human: Hello, who are you?\nAI: I am doing great. How can I help you today?\n';
-    const question = 'Could you tell me what your favorite German thrash metal album is?';
+    console.log(this.chatString + '\nHuman: ' + prompt);
 
     const params = {
-      prompt: `${chatLog}Human: ${prompt}`,
+      prompt: this.chatString + '\nHuman: ' + prompt,
       temperature: 0.9,
       max_tokens: 140,
       frequency_penalty: 0,
@@ -48,13 +42,43 @@ class ChatBot extends HTMLElement {
       console.log(prompt)
       console.log(data);
 
-      const chatData = this.parseGptResponse(prompt, data);
-      this.renderChatItem(chatData);
+      // parse the chat data for what we need
+      // take chatdata, add it to the chat history array,
+      // re-sort the array, optimizing for moving the last time directly to the front
+      // render the new chat data item in front of the existing chat data
+      const newChatData = this.parseGPTResponse(prompt, data);
+      console.log('chat data before updating: ', this.chatData);
+      this.chatData = [newChatData, ...this.chatData];
+      console.log('updated chat data: ', this.chatData);
+      const newChatItem = this.renderChatItem(newChatData);
+      this.chatbox.prepend(newChatItem);
+    this.chatString = this.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response;
+
     })
     .catch(error => console.log(error));
+
+    // cut down on api requests made during prototyping
+    // const data = {
+    //   created: Date.now(),
+    //   choices: [
+    //     {
+    //       text: 'this is dummy data'
+    //     }
+    //   ]
+    // }
+    // const newChatData = this.parseGPTResponse(prompt, data);
+    // console.log('chat data before updating: ', this.chatData);
+    // this.chatData = [newChatData, ...this.chatData];
+    // console.log('updated chat data: ', this.chatData);
+    // const newChatItem = this.renderChatItem(newChatData);
+    // this.chatbox.prepend(newChatItem);
+
+    // this.chatString = this.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response;
+
+    // console.log(this.chatString);
   }
 
-  parseGptResponse = (prompt, responseData) => {
+  parseGPTResponse = (prompt, responseData) => {
     return {
       prompt: prompt,
       response: responseData.choices[0].text,
@@ -71,8 +95,9 @@ class ChatBot extends HTMLElement {
     chat.innerHTML = `
       <div>Prompt: ${prompt}</div>
       <div>Response: ${response}</div>
+      <div>Id: ${id}</div>
     `;
-    this.chatbox.appendChild(chat);
+    return chat;
   }
 }
 
