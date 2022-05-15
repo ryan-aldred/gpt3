@@ -19,11 +19,6 @@ class ChatBot extends HTMLElement {
     let prompt = [...formData][0][1];
     console.log(prompt);
 
-    // [...formData].map(data => {
-    //   console.log(data[0], ': ', data[1]);
-    // })
-    // return;
-
     const chatLog = 'Human: Hello, who are you?\nAI: I am doing great. How can I help you today?\n';
     const question = 'Could you tell me what your favorite German thrash metal album is?';
 
@@ -36,50 +31,44 @@ class ChatBot extends HTMLElement {
       'stop': '\nHuman'
     };
     
-  //   fetch('https://api.openai.com/v1/engines/ada/completions', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/JSON',
-  //       'Authorization': `Bearer ${secret_api_key}`
-  //     },
-  //     body: JSON.stringify(params)
-  //   })
-  //   .then(res => res.json())
-  //   .then(data => {
-  //     console.log(prompt)
-  //     console.log(data);
+    fetch('https://api.openai.com/v1/engines/ada/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/JSON',
+        'Authorization': `Bearer ${secret_api_key}`
+      },
+      body: JSON.stringify(params)
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log(prompt)
+      console.log(data);
 
-  //     const chatData = this.parseGptResponse(prompt, data);
-  //     this.renderChatItem(chatData);
-  //   })
-  //   .catch(error => console.log(error));
-
+      // parse the chat data for what we need
+      // take chatdata, add it to the chat history array,
+      // re-sort the array, optimizing for moving the last time directly to the front
+      // render the new chat data item in front of the existing chat data
+      const newChatData = this.parseGPTResponse(prompt, data);
+      console.log('chat data before updating: ', this.chatData);
+      this.chatData = [newChatData, ...this.chatData];
+      console.log('updated chat data: ', this.chatData);
+      const newChatItem = this.renderChatItem(newChatData);
+      this.chatbox.prepend(newChatItem);
+    })
+    .catch(error => console.log(error));
 
     // cut down on api requests made during prototyping
-    const data = {
-      created: Date.now(),
-      choices: [
-        {
-          text: 'this is dummy data'
-        }
-      ]
-    }
-
-    // parse the chat data for what we need
-    const newChatData = this.parseGptResponse(prompt, data);
-    // take chatdata, add it to the chat history array,
-    this.chatData.push(newChatData);
-    // re-sort the array, optimizing for moving the last time directly to the front
-    // render the new chat data item in front of the existing chat data
-    const newChatItem = this.renderChatItem(newChatData);
-    this.chatbox.prepend(newChatItem);
-
-
-
-    console.log(this.chatData);
+    // const data = {
+    //   created: Date.now(),
+    //   choices: [
+    //     {
+    //       text: 'this is dummy data'
+    //     }
+    //   ]
+    // }
   }
 
-  parseGptResponse = (prompt, responseData) => {
+  parseGPTResponse = (prompt, responseData) => {
     return {
       prompt: prompt,
       response: responseData.choices[0].text,
