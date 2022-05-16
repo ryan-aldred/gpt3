@@ -18,6 +18,13 @@ class ChatBot extends HTMLElement {
 
     const formData = new FormData(this.form);
     let prompt = [...formData][0][1];
+
+    // do nothing if the prompt is empty
+    if(prompt.trim().length === 0) {
+      this.prompt.focus();
+      return;
+    };
+
     console.log(this.chatString + '\nHuman: ' + prompt);
 
     const params = {
