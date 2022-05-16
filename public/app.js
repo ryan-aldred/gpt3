@@ -3,8 +3,10 @@ console.log('gpt3');
 class ChatBot extends HTMLElement {
   constructor () {
     super();
-    this.chatString = 'Human: Hello, who are you?\nAI: I am doing great. How can I help you today?';
-    this.chatData = [];
+    this.data = {
+      chatString: 'Human: Hello, who are you?\nAI: I am doing great. How can I help you today?',
+      chatData: []
+    }
     this.form = this.querySelector('.chatbot__form');
     this.prompt = this.querySelector('.chatbot__input');
     this.chatbox = this.querySelector('.chatbox');
@@ -25,10 +27,10 @@ class ChatBot extends HTMLElement {
       return;
     };
 
-    console.log(this.chatString + '\nHuman: ' + prompt);
+    console.log(this.data.chatString + '\nHuman: ' + prompt);
 
     const params = {
-      prompt: this.chatString + '\nHuman: ' + prompt,
+      prompt: this.data.chatString + '\nHuman: ' + prompt,
       temperature: 0.9,
       max_tokens: 140,
       frequency_penalty: 0,
@@ -59,7 +61,7 @@ class ChatBot extends HTMLElement {
     //   console.log('updated chat data: ', this.chatData);
     //   const newChatItem = this.renderChatItem(newChatData);
     //   this.chatbox.prepend(newChatItem);
-    // this.chatString = this.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response;
+    // this.data.chatString = this.data.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response;
 
     // })
     // .catch(error => console.log(error));
@@ -74,15 +76,15 @@ class ChatBot extends HTMLElement {
       ]
     }
     const newChatData = this.parseGPTResponse(prompt, data);
-    console.log('chat data before updating: ', this.chatData);
-    this.chatData = [newChatData, ...this.chatData];
-    console.log('updated chat data: ', this.chatData);
+    console.log('chat data before updating: ', this.data);
+    this.data.chatData = [newChatData, ...this.data.chatData];
+    console.log('updated chat data: ', this.data);
     const newChatItem = this.renderChatItem(newChatData);
     this.chatbox.prepend(newChatItem);
 
-    this.chatString = this.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response;
+    this.data.chatString = this.data.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response;
 
-    console.log(this.chatString);
+    console.log(this.data.chatString);
     this.prompt.value = '';
     this.prompt.focus();
   }
