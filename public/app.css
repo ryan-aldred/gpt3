@@ -15,6 +15,9 @@
 body {
   background-color: var(--color-background);
   color: var(--color-primary);
+  line-height: 1.5;
+  letter-spacing: .2px;
+  font-family: 'sans-serif';
 }
 
 button {
@@ -104,26 +107,30 @@ chat-bot {
 .chatbot__input:hover,
 .chatbot__submit:hover {
   box-shadow: 0 0 3px 1px var(--color-primary);
+  color: var(--color-primary);
 }
 
 .chatbot__input:focus {
   outline: none;
-  box-shadow: 0 0 3px 1px var(--color-text-accent);
+  box-shadow: 0 0 3px 1px var(--color-primary);
 }
 
 .chatbot__submit {
   padding: 0 20px;
+  color: var(--color-element-accent);
   box-shadow: 0 0 3px 1px var(--color-element-accent);
   border-radius: 5px;
 }
 
 .chatbot__submit:active {
-  color: var(--color-text-accent);
+  /* box-shadow: 0 0 3px 1px var(--color-text-accent); */
+  /* color: var(--color-text-accent); */
 }
 
 .chatbot__submit:focus {
   outline: none;
-  box-shadow: 0 0 3px 1px var(--color-text-accent);
+  box-shadow: 0 0 3px 1px var(--color-primary);
+  color: var(--color-primary);
 }
 
 .chatbox {
@@ -136,7 +143,7 @@ chat-bot {
 }
 
 .chatbox > *:not(:last-child) {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .chatbox__chat {
