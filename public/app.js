@@ -77,12 +77,20 @@ class ChatBot extends HTMLElement {
     }
     const newChatData = this.parseGPTResponse(prompt, data);
     console.log('chat data before updating: ', this.data);
-    this.data.chatData = [newChatData, ...this.data.chatData];
+
+    this.data = {
+      ...this.data,
+      chatData: [newChatData, ...this.data.chatData]
+    }
+
     console.log('updated chat data: ', this.data);
     const newChatItem = this.renderChatItem(newChatData);
     this.chatbox.prepend(newChatItem);
 
-    this.data.chatString = this.data.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response;
+    this.data = {
+      ...this.data,
+      chatString: this.data.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response
+    }
 
     console.log(this.data.chatString);
     this.prompt.value = '';
