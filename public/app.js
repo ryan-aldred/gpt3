@@ -4,8 +4,6 @@ class ChatBot extends HTMLElement {
     this.defaultData = {
       chatString: 'Human: Hello, I would like to return order 2012\nAI: Okay, can I ask the reason for the return?\nHuman: Yes, the jeans are a little bit to small.\nAI: I understand, would you like a replacement or store credit?',
       chatData: [],
-      email: null,
-      orderId: null,
     }
 
     this.data = (JSON.parse(localStorage.getItem('chatData')) || this.defaultData)
