@@ -8,4 +8,4 @@
 2. Fast & Lightweight
   * It loads in < 0.5 seconds and is 7KB ([Pingdom speed test results](https://tools.pingdom.com/#60357d3ed5400000))
 3. Custom Elements
-  * This project follows the same custom element pattern as our flagship theme Dawn
+  * This project uses the same custom element pattern the flagship theme Dawn
