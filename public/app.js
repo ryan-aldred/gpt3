@@ -1,96 +1,199 @@
-console.log('gpt3');
-
 class ChatBot extends HTMLElement {
   constructor () {
     super();
-    this.chatString = 'Human: Hello, who are you?\nAI: I am doing great. How can I help you today?';
-    this.chatData = [];
+    this.defaultData = {
+      chatString: 'Human: Hello, I would like to return order 2012\nAI: Okay, can I ask the reason for the return?\nHuman: Yes, the jeans are a little bit to small.\nAI: I understand, would you like a replacement or store credit?',
+      chatData: [],
+      email: null,
+      orderId: null,
+    }
+
+    this.data = (JSON.parse(localStorage.getItem('chatData')) || this.defaultData)
+
     this.form = this.querySelector('.chatbot__form');
     this.prompt = this.querySelector('.chatbot__input');
     this.chatbox = this.querySelector('.chatbox');
 
+    this.selectors = {
+      chatbox: this.querySelector('.chatbox'),
+      formElements: {
+        prompt: document.querySelector('[data-form-prompt]'),
+        continue: document.querySelector('[data-form-continue]'),
+        submit: document.querySelector('[data-submit-btn]'),
+      }
+    }
+
     this.form.addEventListener('submit', this.handlePromptSubmit);
+    window.addEventListener('DOMContentLoaded', this.handleLoad);
+
+    console.log('this.data on load: ', this.data);
   }
+
+  handleLoad = (evt) => {
+    console.log('on load!')
+    if(!localStorage.hasOwnProperty('chatData')) {
+      // new session
+      this.selectors.formElements.prompt.classList.remove('hide');
+      this.selectors.formElements.submit.classList.remove('hide');
+
+      
+    } else {
+      // returning session
+      console.log('we already have data: ', this.data);
+      this.selectors.formElements.continue.classList.remove('hide');
+      this.selectors.formElements.submit.classList.remove('hide');
+
+
+      this.data.chatData.map((chat) => {
+        console.log(chat)
+        this.chatbox.append(this.renderChatItem(chat));
+      })
+    }
+  };
 
   handlePromptSubmit = (evt) => {
     evt.preventDefault();
     console.log(this);
 
     const formData = new FormData(this.form);
-    let prompt = [...formData][0][1];
+    console.log('formData: ');
 
-    // do nothing if the prompt is empty
-    if(prompt.trim().length === 0) {
-      this.prompt.focus();
+    [...formData].map(data => console.log(data));
+
+    const filteredFormData = [...formData].filter(data => data[1].trim().length > 0);
+
+    if(!filteredFormData.length > 0) return;
+
+    const continueChat = filteredFormData.every(data => {
+      return data[0] === 'continue';
+    });
+
+    if(continueChat) {
+      console.log('handle continue chat');
+      const response = filteredFormData[0][1].trim().toLowerCase();
+      if(response === 'y' || response === 'n' || response === 'yes' || response === 'no') {
+        console.log('valid response');
+        // valid response
+        if(response === 'y' || response === 'yes') {
+          console.log('continue with last chat');
+        } else {
+          this.data =  {
+            ...this.defaultData
+          }
+          localStorage.removeItem('chatData');
+          this.selectors.chatbox.innerHTML = '';
+        }
+        this.selectors.formElements.continue.classList.add('hide');
+        this.selectors.formElements.prompt.classList.remove('hide');
+        this.selectors.formElements.continue.querySelector('input').value = '';
+        this.selectors.formElements.prompt.querySelector('input').focus();
+      } else {
+        console.log('invalid response');
+        this.selectors.formElements.continue.querySelector('input').value = '';
+        this.selectors.formElements.continue.querySelector('input').focus();
+      }
       return;
-    };
+    }
 
-    console.log(this.chatString + '\nHuman: ' + prompt);
+    const [prompt] = filteredFormData.filter(data => {
+      return data[0] === 'prompt';
+    })
+
+    console.log('the prompt: ', prompt[1]);
+
+    console.log(this.data.chatString + '\nHuman: ' + prompt[1]);
 
     const params = {
-      prompt: this.chatString + '\nHuman: ' + prompt,
+      prompt: this.data.chatString + '\nHuman: ' + prompt[1],
       temperature: 0.9,
       max_tokens: 140,
       frequency_penalty: 0,
       presence_penalty: 0.6,
       'stop': '\nHuman'
     };
+
+    const engine = 'ada';
+    // const engine = 'curie';
     
-    // fetch('https://api.openai.com/v1/engines/ada/completions', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/JSON',
-    //     'Authorization': `Bearer ${secret_api_key}`
-    //   },
-    //   body: JSON.stringify(params)
-    // })
-    // .then(res => res.json())
-    // .then(data => {
-    //   console.log(prompt)
-    //   console.log(data);
+    fetch(`https://api.openai.com/v1/engines/${engine}/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/JSON',
+        'Authorization': `Bearer ${secret_api_key}`
+      },
+      body: JSON.stringify(params)
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log(prompt[1])
+      console.log(data);
 
-    //   // parse the chat data for what we need
-    //   // take chatdata, add it to the chat history array,
-    //   // re-sort the array, optimizing for moving the last time directly to the front
-    //   // render the new chat data item in front of the existing chat data
-    //   const newChatData = this.parseGPTResponse(prompt, data);
-    //   console.log('chat data before updating: ', this.chatData);
-    //   this.chatData = [newChatData, ...this.chatData];
-    //   console.log('updated chat data: ', this.chatData);
-    //   const newChatItem = this.renderChatItem(newChatData);
-    //   this.chatbox.prepend(newChatItem);
-    // this.chatString = this.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response;
+      const newChatData = this.parseGPTResponse(prompt[1], data);
+      console.log('chat data before updating: ', this.data);
 
-    // })
-    // .catch(error => console.log(error));
+      this.data = {
+        ...this.data,
+        chatData: [newChatData, ...this.data.chatData]
+      }
+
+      console.log('updated chat data: ', this.data);
+      const newChatItem = this.renderChatItem(newChatData);
+      this.chatbox.prepend(newChatItem);
+
+      this.data = {
+        ...this.data,
+        chatString: this.data.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response
+      }
+
+      console.log(this.data.chatString);
+      this.prompt.value = '';
+      this.prompt.focus();
+
+      localStorage.setItem('chatData', JSON.stringify(this.data));
+
+
+    })
+    .catch(error => console.log(error));
 
     // cut down on api requests made during prototyping
-    const data = {
-      created: Date.now(),
-      choices: [
-        {
-          text: 'this is dummy data'
-        }
-      ]
-    }
-    const newChatData = this.parseGPTResponse(prompt, data);
-    console.log('chat data before updating: ', this.chatData);
-    this.chatData = [newChatData, ...this.chatData];
-    console.log('updated chat data: ', this.chatData);
-    const newChatItem = this.renderChatItem(newChatData);
-    this.chatbox.prepend(newChatItem);
+    // const data = {
+    //   created: Date.now(),
+    //   choices: [
+    //     {
+    //       text: 'this is dummy data'
+    //     }
+    //   ]
+    // }
+    // const newChatData = this.parseGPTResponse(prompt[1], data);
+    // console.log('chat data before updating: ', this.data);
 
-    this.chatString = this.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response;
+    // this.data = {
+    //   ...this.data,
+    //   chatData: [newChatData, ...this.data.chatData]
+    // }
 
-    console.log(this.chatString);
-    this.prompt.value = '';
-    this.prompt.focus();
+    // console.log('updated chat data: ', this.data);
+    // const newChatItem = this.renderChatItem(newChatData);
+    // this.chatbox.prepend(newChatItem);
+
+    // this.data = {
+    //   ...this.data,
+    //   chatString: this.data.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response
+    // }
+
+    // console.log(this.data.chatString);
+    // this.prompt.value = '';
+    // this.prompt.focus();
+
+    // localStorage.setItem('chatData', JSON.stringify(this.data));
   }
 
   parseGPTResponse = (prompt, responseData) => {
+    const parsedResponse = responseData.choices[0].text.split('AI: ').pop();
+
     return {
       prompt: prompt,
-      response: responseData.choices[0].text,
+      response: parsedResponse,
       id: responseData.created,
     }
   }

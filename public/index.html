@@ -4,24 +4,34 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>gpt3</title>
+  <title>Ask Norma</title>
   <link rel="stylesheet" href="./app.css">
 </head>
 <body>
   <header class="header">
-    <h1>gpt3</h1>
+    <h1>Ask Norma</h1>
   </header>
   <div class="chatbot__wrapper">
     <chat-bot>
       <h2 class="chatbot__heading">Ask Norma</h2>
       <p class="chatbot__intro">
-        Norma is our return support specialist, please let her know name and order number
+        Norma is our return support assisstant, please let her know your order number
       </p>
-      <form class="chatbot__form">
-        <label class="chatbot__input-label" for="prompt">Ask Norma</label>
-        <input name="prompt" id='prompt' type="text" class="chatbot__input" autocomplete='off' placeholder='I need help returning order 80123'/>
-        <button type="submit" class='chatbot__submit'>Go</button>
-      </form>
+      <div class="chatbot__wrapper">
+        <form class="chatbot__form">
+          <div class="form-control hide" data-form-prompt>
+            <input name="prompt" id='prompt' type="text" class="chatbot__input" autocomplete='off' placeholder='chat...'/>
+            <label class="chatbot__input-label" for="prompt">Ask Norma</label>
+          </div>
+          <div class="form-control hide" data-form-continue>
+            <input name="continue" id='prompt' type="text" class="chatbot__input" autocomplete='off' placeholder='y/n'/>
+            <label class="chatbot__input-label" for="prompt">Continue where you left off? (y/n)</label>
+          </div>
+          <button type="submit" class='chatbot__submit hide' data-submit-btn>Go</button>
+        </form>
+      </div>
+
+
       <ul class="chatbox"></ul>
     </chat-bot>
   </div>
