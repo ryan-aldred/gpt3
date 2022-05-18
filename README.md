@@ -4,8 +4,8 @@
 ## Key takeaways
 
 1. Vanilla everything
-  * No frameworks, no libraries, just HTML, CSS, and Javascript
+  * No frameworks or libraries, just HTML, CSS, and Javascript
 2. Fast & Lightweight
   * Loads in < 0.5 seconds and is 7KB ([Pingdom speed test results](https://tools.pingdom.com/#60357d3ed5400000))
 3. Custom Elements
-  * This project uses the same custom element pattern the flagship theme Dawn
+  * This project uses the same custom element pattern as Dawn our flagship theme
