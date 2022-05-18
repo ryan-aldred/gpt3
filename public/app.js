@@ -125,33 +125,22 @@ class ChatBot extends HTMLElement {
     })
     .then(res => res.json())
     .then(data => {
-      console.log(prompt[1])
-      console.log(data);
-
       const newChatData = this.parseGPTResponse(prompt[1], data);
-      console.log('chat data before updating: ', this.data);
-
-      this.data = {
-        ...this.data,
-        chatData: [newChatData, ...this.data.chatData]
-      }
-
-      console.log('updated chat data: ', this.data);
       const newChatItem = this.renderChatItem(newChatData);
+
       this.chatbox.prepend(newChatItem);
 
       this.data = {
         ...this.data,
+        chatData: [newChatData, ...this.data.chatData],
         chatString: this.data.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response
       }
 
       console.log(this.data.chatString);
+
       this.prompt.value = '';
       this.prompt.focus();
-
       localStorage.setItem('chatData', JSON.stringify(this.data));
-
-
     })
     .catch(error => console.log(error));
 
