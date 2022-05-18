@@ -3,13 +3,39 @@ console.log('gpt3');
 class ChatBot extends HTMLElement {
   constructor () {
     super();
-    this.data = (JSON.parse(localStorage.getItem('chatData')) || {
+    this.defaultData = {
       chatString: 'Human: Hello, who are you?\nAI: I am doing great. How can I help you today?',
-      chatData: []
-    })
+      chatData: [],
+      email: null,
+      orderId: null,
+    }
+
+    // this.data = (JSON.parse(localStorage.getItem('chatData')) || {
+    //   chatString: 'Human: Hello, who are you?\nAI: I am doing great. How can I help you today?',
+    //   chatData: [],
+    //   email: null,
+    //   orderId: null,
+    // })
+
+    this.data = (JSON.parse(localStorage.getItem('chatData')) || this.defaultData)
+
     this.form = this.querySelector('.chatbot__form');
     this.prompt = this.querySelector('.chatbot__input');
     this.chatbox = this.querySelector('.chatbox');
+
+    this.selectors = {
+      chatbox: this.querySelector('.chatbox'),
+      formElements: {
+        // welcome: document.querySelector('[data-form-welcome]'),
+        // chat: document.querySelector('[data-form-order-chat]'),
+        // continue: document.querySelector('[data-form-continue]'),
+        // email: document.querySelector('[data-form-email]'),
+        // orderId: document.querySelector('[data-form-order-id]'),
+        prompt: document.querySelector('[data-form-prompt]'),
+        continue: document.querySelector('[data-form-continue]'),
+        submit: document.querySelector('[data-submit-btn]'),
+      }
+    }
 
     this.form.addEventListener('submit', this.handlePromptSubmit);
     window.addEventListener('DOMContentLoaded', this.handleLoad);
@@ -19,9 +45,27 @@ class ChatBot extends HTMLElement {
 
   handleLoad = (evt) => {
     console.log('on load!')
-    // if(localStorage.hasOwnPropterty('chatData')) {
-    if(localStorage.hasOwnProperty('chatData')) {
+    if(!localStorage.hasOwnProperty('chatData')) {
+      // new session
+
+      // this.selectors.formElements.welcome.classList.remove('hide');
+      // this.selectors.formElements.submit.classList.remove('hide');
+      // this.selectors.formElements.email.classList.remove('hide');
+      // this.selectors.formElements.orderId.classList.remove('hide');
+
+      this.selectors.formElements.prompt.classList.remove('hide');
+      this.selectors.formElements.submit.classList.remove('hide');
+
+      
+    } else {
+      // returning session
       console.log('we already have data: ', this.data);
+      // this.selectors.formElements.continue.classList.remove('hide');
+      // this.selectors.formElements.submit.classList.remove('hide');
+
+      this.selectors.formElements.continue.classList.remove('hide');
+      this.selectors.formElements.submit.classList.remove('hide');
+
 
       this.data.chatData.map((chat) => {
         // return this.renderChatItem(chat);
@@ -36,13 +80,68 @@ class ChatBot extends HTMLElement {
     console.log(this);
 
     const formData = new FormData(this.form);
-    let prompt = [...formData][0][1];
+    console.log('formData: ');
 
-    // do nothing if the prompt is empty
-    if(prompt.trim().length === 0) {
-      this.prompt.focus();
+    [...formData].map(data => console.log(data));
+
+    const filteredFormData = [...formData].filter(data => data[1].trim().length > 0);
+
+    if(!filteredFormData.length > 0) return;
+
+    const continueChat = filteredFormData.every(data => {
+      return data[0] === 'continue';
+    });
+
+    if(continueChat) {
+      console.log('handle continue chat');
+      const response = filteredFormData[0][1].trim().toLowerCase();
+      if(response === 'y' || response === 'n' || response === 'yes' || response === 'no') {
+        console.log('valid response');
+        // valid response
+        if(response === 'y' || response === 'yes') {
+          console.log('continue with last chat');
+          // this.selectors.formElements.continue.classList.add('hide');
+          // this.selectors.formElements.prompt.classList.remove('hide');
+          // this.selectors.formElements.continue.querySelector('input').value = '';
+          // this.selectors.formElements.prompt.querySelector('input').focus();
+        } else {
+          this.data =  {
+            ...this.defaultData
+          }
+          localStorage.removeItem('chatData');
+          this.selectors.chatbox.innerHTML = '';
+          // this.selectors.formElements.continue.classList.add('hide');
+          // this.selectors.formElements.continue.querySelector('input').value = '';
+          // this.selectors.formElements.prompt.classList.remove('hide');
+          // this.selectors.formElements.prompt.querySelector('input').focus();
+        }
+        this.selectors.formElements.continue.classList.add('hide');
+        this.selectors.formElements.prompt.classList.remove('hide');
+        this.selectors.formElements.continue.querySelector('input').value = '';
+        this.selectors.formElements.prompt.querySelector('input').focus();
+        // return;
+      } else {
+        console.log('invalid response');
+        this.selectors.formElements.continue.querySelector('input').value = '';
+        this.selectors.formElements.continue.querySelector('input').focus();
+      }
       return;
-    };
+    }
+
+    // const isNewSession = filteredFormData.every(data => {
+    //   return data[0] === 'email' || data[0] === 'orderId';
+    // });
+
+    // if(isNewSession) {
+    //   console.log('handle new session');
+    //   console.log('email: ', filteredFormData['email'][1]);
+    //   this.data = {
+    //     ...this.data,
+    //     email: email
+    //   }
+    //   return;
+    // }
+
 
     console.log(this.data.chatString + '\nHuman: ' + prompt);
 

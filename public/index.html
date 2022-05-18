@@ -18,30 +18,30 @@
         Norma is our return support assisstant, please let her know your email address and order number
       </p>
       <div class="chatbot__wrapper">
-        <form class="chatbot__form chatbot__form--chat ">
-          <div class="form-control">
-            <input name="prompt" id='prompt' type="text" class="chatbot__input" autocomplete='off' placeholder='chat...'/>
-            <label class="chatbot__input-label" for="prompt">Ask Norma</label>
-          </div>
-          <button type="submit" class='chatbot__submit'>Go</button>
-        </form>
-        <form class="chatbot__form chatbot__form--intro">
-          <div class="form-control">
+        <form class="chatbot__form">
+          <!-- <div class="form-control hide" data-form-email>
             <input name="email" id='email' type="email" class="chatbot__input" autocomplete='off' placeholder='ex: example@gmail.com'/>
             <label class="chatbot__input-label" for="email">Email</label>
           </div>
-          <div class="form-control"> 
-            <input name="email" id='orderId' type="text" class="chatbot__input" autocomplete='off' placeholder='ex: 1011'/>
+          <div class="form-control hide" data-form-order-id> 
+            <input name="orderId" id='orderId' type="text" class="chatbot__input" autocomplete='off' placeholder='ex: 1011'/>
             <label class="chatbot__input-label" for="orderId">Order ID</label>
-          </div>
-          <button type="submit" class='chatbot__submit'>Go</button>
-        </form>
-        <form class="chatbot__form chatbot__form--return ">
-          <div class="form-control">
-            <input name="prompt" id='prompt' type="text" class="chatbot__input" autocomplete='off' placeholder='welcome back...'/>
+          </div> -->
+          <!-- <button type="submit" class='chatbot__submit'>Go</button> -->
+          <!-- </form> -->
+          <!-- <form class="chatbot__form chatbot__form--chat hide"> -->
+          <div class="form-control hide" data-form-prompt>
+            <input name="prompt" id='prompt' type="text" class="chatbot__input" autocomplete='off' placeholder='chat...'/>
             <label class="chatbot__input-label" for="prompt">Ask Norma</label>
           </div>
-          <button type="submit" class='chatbot__submit'>Go</button>
+          <!-- <button type="submit" class='chatbot__submit'>Go</button> -->
+          <!-- </form> -->
+          <!-- <form class="chatbot__form chatbot__form--return "> -->
+          <div class="form-control hide" data-form-continue>
+            <input name="continue" id='prompt' type="text" class="chatbot__input" autocomplete='off' placeholder='y/n'/>
+            <label class="chatbot__input-label" for="prompt">Continue where you left off? (y/n)</label>
+          </div>
+          <button type="submit" class='chatbot__submit hide' data-submit-btn>Go</button>
         </form>
       </div>
 
