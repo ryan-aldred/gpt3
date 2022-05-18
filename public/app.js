@@ -3,16 +3,33 @@ console.log('gpt3');
 class ChatBot extends HTMLElement {
   constructor () {
     super();
-    this.data = {
+    this.data = (JSON.parse(localStorage.getItem('chatData')) || {
       chatString: 'Human: Hello, who are you?\nAI: I am doing great. How can I help you today?',
       chatData: []
-    }
+    })
     this.form = this.querySelector('.chatbot__form');
     this.prompt = this.querySelector('.chatbot__input');
     this.chatbox = this.querySelector('.chatbox');
 
     this.form.addEventListener('submit', this.handlePromptSubmit);
+    window.addEventListener('DOMContentLoaded', this.handleLoad);
+
+    console.log('this.data on load: ', this.data);
   }
+
+  handleLoad = (evt) => {
+    console.log('on load!')
+    // if(localStorage.hasOwnPropterty('chatData')) {
+    if(localStorage.hasOwnProperty('chatData')) {
+      console.log('we already have data: ', this.data);
+
+      this.data.chatData.map((chat) => {
+        // return this.renderChatItem(chat);
+        console.log(chat)
+        this.chatbox.append(this.renderChatItem(chat));
+      })
+    }
+  };
 
   handlePromptSubmit = (evt) => {
     evt.preventDefault();
@@ -52,6 +69,10 @@ class ChatBot extends HTMLElement {
     //   console.log(data);
 
     //   // parse the chat data for what we need
+
+    // will need to update code below!!
+
+
     //   // take chatdata, add it to the chat history array,
     //   // re-sort the array, optimizing for moving the last time directly to the front
     //   // render the new chat data item in front of the existing chat data
@@ -95,6 +116,8 @@ class ChatBot extends HTMLElement {
     console.log(this.data.chatString);
     this.prompt.value = '';
     this.prompt.focus();
+
+    localStorage.setItem('chatData', JSON.stringify(this.data));
   }
 
   parseGPTResponse = (prompt, responseData) => {

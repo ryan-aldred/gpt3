@@ -15,13 +15,37 @@
     <chat-bot>
       <h2 class="chatbot__heading">Ask Norma</h2>
       <p class="chatbot__intro">
-        Norma is our return support specialist, please let her know name and order number
+        Norma is our return support assisstant, please let her know your email address and order number
       </p>
-      <form class="chatbot__form">
-        <label class="chatbot__input-label" for="prompt">Ask Norma</label>
-        <input name="prompt" id='prompt' type="text" class="chatbot__input" autocomplete='off' placeholder='I need help returning order 80123'/>
-        <button type="submit" class='chatbot__submit'>Go</button>
-      </form>
+      <div class="chatbot__wrapper">
+        <form class="chatbot__form chatbot__form--chat ">
+          <div class="form-control">
+            <input name="prompt" id='prompt' type="text" class="chatbot__input" autocomplete='off' placeholder='chat...'/>
+            <label class="chatbot__input-label" for="prompt">Ask Norma</label>
+          </div>
+          <button type="submit" class='chatbot__submit'>Go</button>
+        </form>
+        <form class="chatbot__form chatbot__form--intro">
+          <div class="form-control">
+            <input name="email" id='email' type="email" class="chatbot__input" autocomplete='off' placeholder='ex: example@gmail.com'/>
+            <label class="chatbot__input-label" for="email">Email</label>
+          </div>
+          <div class="form-control"> 
+            <input name="email" id='orderId' type="text" class="chatbot__input" autocomplete='off' placeholder='ex: 1011'/>
+            <label class="chatbot__input-label" for="orderId">Order ID</label>
+          </div>
+          <button type="submit" class='chatbot__submit'>Go</button>
+        </form>
+        <form class="chatbot__form chatbot__form--return ">
+          <div class="form-control">
+            <input name="prompt" id='prompt' type="text" class="chatbot__input" autocomplete='off' placeholder='welcome back...'/>
+            <label class="chatbot__input-label" for="prompt">Ask Norma</label>
+          </div>
+          <button type="submit" class='chatbot__submit'>Go</button>
+        </form>
+      </div>
+
+
       <ul class="chatbox"></ul>
     </chat-bot>
   </div>
