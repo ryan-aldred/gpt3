@@ -45,6 +45,7 @@ ul {
 input {
   background-color: var(--color-background);
   color: var(--color-primary);
+  -webkit-appearance: none;
 }
 
 .page-width {
