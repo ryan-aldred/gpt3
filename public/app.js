@@ -29,12 +29,10 @@ class ChatBot extends HTMLElement {
       this.selectors.formElements.submit.classList.remove('hide');      
     } else {
       // returning session
-      console.log('we already have data: ', this.data);
       this.selectors.formElements.continue.classList.remove('hide');
       this.selectors.formElements.submit.classList.remove('hide');
 
       this.data.chatData.map((chat) => {
-        console.log(chat)
         this.selectors.chatbox.append(this.renderChatItem(chat));
       })
     }
@@ -53,26 +51,22 @@ class ChatBot extends HTMLElement {
     });
 
     if(continueChat) {
-      console.log('handle continue chat');
       const response = filteredFormData[0][1].trim().toLowerCase();
       if(response === 'y' || response === 'n' || response === 'yes' || response === 'no') {
-        console.log('valid response');
-        // valid response
-        if(response === 'y' || response === 'yes') {
-          console.log('continue with last chat');
-        } else {
+        if(response === 'n' || response === 'no') {
+          this.selectors.chatbox.innerHTML = '';
           this.data =  {
             ...this.defaultData
           }
           localStorage.removeItem('chatData');
-          this.selectors.chatbox.innerHTML = '';
         }
+
         this.selectors.formElements.continue.classList.add('hide');
         this.selectors.formElements.prompt.classList.remove('hide');
         this.selectors.formElements.continue.querySelector('input').value = '';
         this.selectors.formElements.prompt.querySelector('input').focus();
       } else {
-        console.log('invalid response');
+        // they didn't enter y/n
         this.selectors.formElements.continue.querySelector('input').value = '';
         this.selectors.formElements.continue.querySelector('input').focus();
       }
@@ -122,32 +116,6 @@ class ChatBot extends HTMLElement {
       localStorage.setItem('chatData', JSON.stringify(this.data));
     })
     .catch(error => console.log(error));
-
-    // cut down on api requests made during prototyping
-    // const data = {
-    //   created: Date.now(),
-    //   choices: [
-    //     {
-    //       text: 'this is dummy data'
-    //     }
-    //   ]
-    // }
-
-    // const newChatData = this.parseGPTResponse(prompt[1], data);
-    // const newChatItem = this.renderChatItem(newChatData);
-
-    // this.selectors.chatbox.prepend(newChatItem);
-
-    // this.data = {
-    //   ...this.data,
-    //   chatData: [newChatData, ...this.data.chatData],
-    //   chatString: this.data.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response
-    // }
-
-    // this.selectors.formElements.prompt.querySelector('input').value = '';
-    // this.selectors.formElements.prompt.querySelector('input').focus();
-
-    // localStorage.setItem('chatData', JSON.stringify(this.data));
   }
 
   parseGPTResponse = (prompt, responseData) => {
