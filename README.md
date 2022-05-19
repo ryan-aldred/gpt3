@@ -7,5 +7,5 @@
   * No frameworks or libraries, just HTML, CSS, and Javascript
 2. Fast & Lightweight
   * Loads in < 0.5 seconds and is 7KB ([Pingdom speed test results](https://tools.pingdom.com/#60357d3ed5400000))
-3. Custom Elements
-  * This project uses the same custom element pattern as Dawn our flagship theme
+3. Web native
+  * Norma leverages the features available in todays browsers
