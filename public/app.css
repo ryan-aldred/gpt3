@@ -71,14 +71,14 @@ input {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* height: 90vh; */
+  /* min-height: 90vh; */
 }
 
 chat-bot {
   box-shadow: 0 0 12px 1px var(--color-element-accent);
   padding: 20px 30px;
   border-radius: 15px;
-  max-width: 600px;
+  max-width: 800px;
   height: 100%;
   margin: 50px 20px 30px;
 }
@@ -93,7 +93,7 @@ chat-bot {
   margin-bottom: 30px;
 }
 
-.chatbot__wrapper {
+.form__wrapper {
   margin-bottom: 30px;
 }
 

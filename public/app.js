@@ -113,66 +113,61 @@ class ChatBot extends HTMLElement {
     const engine = 'ada';
     // const engine = 'curie';
     
-    fetch(`https://api.openai.com/v1/engines/${engine}/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/JSON',
-        'Authorization': `Bearer ${secret_api_key}`
-      },
-      body: JSON.stringify(params)
-    })
-    .then(res => res.json())
-    .then(data => {
-      const newChatData = this.parseGPTResponse(prompt[1], data);
-      const newChatItem = this.renderChatItem(newChatData);
+    // fetch(`https://api.openai.com/v1/engines/${engine}/completions`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/JSON',
+    //     'Authorization': `Bearer ${secret_api_key}`
+    //   },
+    //   body: JSON.stringify(params)
+    // })
+    // .then(res => res.json())
+    // .then(data => {
+    //   const newChatData = this.parseGPTResponse(prompt[1], data);
+    //   const newChatItem = this.renderChatItem(newChatData);
 
-      this.chatbox.prepend(newChatItem);
+    //   this.chatbox.prepend(newChatItem);
 
-      this.data = {
-        ...this.data,
-        chatData: [newChatData, ...this.data.chatData],
-        chatString: this.data.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response
-      }
+    //   this.data = {
+    //     ...this.data,
+    //     chatData: [newChatData, ...this.data.chatData],
+    //     chatString: this.data.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response
+    //   }
 
-      console.log(this.data.chatString);
+    //   console.log(this.data.chatString);
 
-      this.prompt.value = '';
-      this.prompt.focus();
-      localStorage.setItem('chatData', JSON.stringify(this.data));
-    })
-    .catch(error => console.log(error));
+    //   this.prompt.value = '';
+    //   this.prompt.focus();
+    //   localStorage.setItem('chatData', JSON.stringify(this.data));
+    // })
+    // .catch(error => console.log(error));
 
     // cut down on api requests made during prototyping
-    // const data = {
-    //   created: Date.now(),
-    //   choices: [
-    //     {
-    //       text: 'this is dummy data'
-    //     }
-    //   ]
-    // }
-    // const newChatData = this.parseGPTResponse(prompt[1], data);
-    // console.log('chat data before updating: ', this.data);
+    const data = {
+      created: Date.now(),
+      choices: [
+        {
+          text: 'this is dummy data'
+        }
+      ]
+    }
 
-    // this.data = {
-    //   ...this.data,
-    //   chatData: [newChatData, ...this.data.chatData]
-    // }
+    const newChatData = this.parseGPTResponse(prompt[1], data);
+    const newChatItem = this.renderChatItem(newChatData);
 
-    // console.log('updated chat data: ', this.data);
-    // const newChatItem = this.renderChatItem(newChatData);
-    // this.chatbox.prepend(newChatItem);
+    this.chatbox.prepend(newChatItem);
 
-    // this.data = {
-    //   ...this.data,
-    //   chatString: this.data.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response
-    // }
+    this.data = {
+      ...this.data,
+      chatData: [newChatData, ...this.data.chatData],
+      chatString: this.data.chatString + '\nHuman: ' + newChatData.prompt + '\nAI: ' + newChatData.response
+    }
 
-    // console.log(this.data.chatString);
-    // this.prompt.value = '';
-    // this.prompt.focus();
+    console.log(this.data.chatString);
 
-    // localStorage.setItem('chatData', JSON.stringify(this.data));
+    this.prompt.value = '';
+    this.prompt.focus();
+    localStorage.setItem('chatData', JSON.stringify(this.data));
   }
 
   parseGPTResponse = (prompt, responseData) => {
