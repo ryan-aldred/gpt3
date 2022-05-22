@@ -87,8 +87,8 @@ class ChatBot extends HTMLElement {
       'stop': '\nHuman'
     };
 
-    const engine = 'ada';
-    // const engine = 'curie';
+    // const engine = 'ada';
+    const engine = 'curie';
     
     fetch(`https://api.openai.com/v1/engines/${engine}/completions`, {
       method: 'POST',
