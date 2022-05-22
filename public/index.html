@@ -26,15 +26,16 @@
             <label class="chatbot__input-label" for="prompt">Ask Norma</label>
           </div>
           <div class="form-control hide" data-form-continue>
-            <input name="continue" id='prompt' type="text" class="chatbot__input" autocomplete='off' placeholder='y/n'/>
-            <label class="chatbot__input-label" for="prompt">Continue where you left off? (y/n)</label>
+            <input name="continue" id='prompt' type="text" class="chatbot__input" autocomplete='off' placeholder='yes/ no'/>
+            <label class="chatbot__input-label" for="prompt">Continue where you left off?</label>
           </div>
           <button type="submit" class='chatbot__submit hide' data-submit-btn>Go</button>
         </form>
       </div>
 
 
-      <ul class="chatbox"></ul>
+      <div class="chatbot__response visually-hidden" aria-live="polite"></div>
+      <ol class="chatbox"></ol>
     </chat-bot>
   </div>
 
