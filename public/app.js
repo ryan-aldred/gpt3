@@ -9,6 +9,7 @@ class ChatBot extends HTMLElement {
     this.data = (JSON.parse(localStorage.getItem('chatData')) || this.defaultData)
 
     this.selectors = {
+      chatbotResponse: this.querySelector('.chatbot__response'),
       chatbox: this.querySelector('.chatbox'),
       form: this.querySelector('.chatbot__form'),
       formElements: {
@@ -80,14 +81,14 @@ class ChatBot extends HTMLElement {
     const params = {
       prompt: this.data.chatString + '\nHuman: ' + prompt[1],
       temperature: 0.9,
-      max_tokens: 140,
+      max_tokens: 80,
       frequency_penalty: 0,
       presence_penalty: 0.6,
       'stop': '\nHuman'
     };
 
-    // const engine = 'ada';
-    const engine = 'curie';
+    const engine = 'ada';
+    // const engine = 'curie';
     
     fetch(`https://api.openai.com/v1/engines/${engine}/completions`, {
       method: 'POST',
@@ -103,6 +104,7 @@ class ChatBot extends HTMLElement {
       const newChatItem = this.renderChatItem(newChatData);
 
       this.selectors.chatbox.prepend(newChatItem);
+      this.selectors.chatbotResponse.textContent = `Norma says ${newChatData.response}`;
 
       this.data = {
         ...this.data,
@@ -135,8 +137,8 @@ class ChatBot extends HTMLElement {
     chat.innerHTML = `
       <div class='chatbox__chat-prompt'><span class='chatbox__prompt-author'>You</span> ${prompt}</div>
       <div class='chatbox__response'>
-        <span>${response}</span>
-        <span class='chatbox__response-author'>Norma</span>
+      <span class='chatbox__response-author'>Norma</span>
+      <span>${response}</span>
       </div>
     `;
     return chat;

@@ -38,7 +38,7 @@ button {
   text-decoration: none;
 }
 
-ul {
+ol {
   list-style: none;
 }
 
@@ -66,6 +66,15 @@ input {
 
 .form-text {
   margin-bottom: 10px;
+}
+
+.visually-hidden {
+  position:absolute;
+  left:-10000px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
 }
 
 .header {
@@ -216,7 +225,8 @@ chat-bot {
 }
 
 .chatbox__response {
-  text-align: right;
+  display: flex;
+  flex-direction: row-reverse;
 }
 
 .chatbox__prompt-author,
